@@ -222,7 +222,7 @@ body {
   left: 32px;
   z-index: 3;
   font-family: 'Inter', sans-serif;
-  font-size: 40px;
+  font-size: 25px;
   font-weight: 900;
   background: rgb(119 0 40);
   padding: 10px 20px;
@@ -425,10 +425,9 @@ htmlToImage.toPng(outputEl, {
     filter: 'brightness(1.15) contrast(1.1) saturate(1.2)' // ← Tambahan penting
   }
 })
-
         .then(dataUrl => {
           const link = document.createElement('a');
-          link.download = '808-news-hd.png';
+          link.download = 'kabar-news-hd.png';
           link.href = dataUrl;
           link.click();
         })
