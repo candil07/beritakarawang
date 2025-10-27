@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Poster CNN Nasional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/html-to-image"></script>
+  <style>
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+    #updateDate {
+      margin-bottom: 10px;
+      color: #facc15;
+    }
+
+    .post-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .post-card {
+      background: #1e293b;
+    border-radius: 10px;
+    overflow: hidden;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+    }
+
+    .post-card:hover {
+      transform: scale(1.02);
+    }
+
+    .post-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .post-card .title {
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-bottom: 20px;
+    }
+
+    .buttons button {
+      padding: 10px 18px;
+      margin: 0 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+#output {
+  position: relative;
+  width: 1080px;
+  height: 1350px; /* ubah dari 1080px jadi 1350px */
+  margin: 40px auto;
+  border-radius: 6px;
+  overflow: hidden;
+  display: none;
+  filter: brightness(1.15) contrast(1.1) saturate(1.2);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  background: #000;
+}
+
+#bgImage {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* tetap cover, tapi proporsi lebih tinggi */
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+
+    .bg-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.35);
+      z-index: 2;
+    }
+
+   .bottom-gradient {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to top, rgba(15,23,42,0.85), transparent);
+  z-index: 2;
+}
+.judul-container {
+  position: absolute;
+  bottom: 100px;
+  width: 100%;
+  padding: 0 40px;
+  z-index: 4;
+  text-align: left;
+}
+
+
+    .cnn-logo {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      width: 120px;
+      z-index: 3;
+    }
+
+    .judul-container {
+      position: absolute;
+      bottom: 100px;
+      width: 100%;
+      padding: 0 40px;
+      z-index: 3;
+      text-align: left;
+    }
+
+
+.watermark-domain {
+  position: absolute;
+  bottom: 60px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 14px; /* jarak antar item */
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff; /* kuning modern */
+  z-index: 3;
+}
+
+.watermark-domain .social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.watermark-domain svg {
+  width: 22px;
+  height: 22px;
+  fill: #fa1515; /* ikuti warna teks */
+}
+
+    .watermark-domain img {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+
+    #output.loading::before {
+      content: "Memuat gambar HD...";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(15,23,42,0.9);
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 20px;
+      z-index: 5;
+    }.bottom-gradient {
+  height: 20%; /* atau kurang dari 30% */
+}
+.judul-container {
+  position: absolute;
+  bottom: 110px;
+  left: 0;
+  right: 0;
+  padding: 0 40px;
+  z-index: 4;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.judul-bg {
+    background: linear-gradient(135deg, rgb(255 255 255 / 90%), rgb(243 243 243 / 85%));
+    backdrop-filter: blur(8px);
+    display: inline-block;
+    padding: 24px 32px;
+    border-radius: 18px;
+    max-width: 100%;
+    box-shadow: 0 4px 12px #38a4f0, inset 0 1px 4px rgba(255, 255, 255, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.judul-bg span {
+  font-size: 55px;
+  font-weight: 900;
+  color: #000000; /* putih kontras */
+  line-height: 1.1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgb(0 0 0 / 25%);
+  display: block;
+  white-space: normal;
+}
+
+.custom-logo {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 3;
+  font-family: 'Inter', sans-serif;
+  font-size: 25px;
+  font-weight: 900;
+  background: rgb(119 0 40);
+  padding: 10px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  display: inline-block;
+}
+
+.custom-logo .blue {
+  color: #38bdf8;
+}
+
+.custom-logo .yellow {
+  color: #fde047;
+}
+
+
+  </style>
+</head>
+<body>
+  <h1>Poster Berita CNN Nasional</h1>
+  <div id="updateDate"></div>
+  <div class="post-list" id="postList"></div>
+  <div class="buttons">
+  <button id="downloadBtn">Download Poster (HD)</button>
+  <button id="copyBtn">Copy Isi Berita</button>
+  <button id="loadMoreBtn">Load More</button> <!-- NEW -->
+</div>
+<div style="display: flex; justify-content: center;"></div>
+  <div id="output">
+    <img id="bgImage" src="" alt="Background"/>
+    <div class="bg-overlay"></div>
+    <div class="bottom-gradient"></div>
+<div class="custom-logo">
+  <span class="blue">Kabar</span><span class="yellow"> Karawang</span>
+</div>
+
+    <div class="judul-container">
+      <div class="judul-bg">
+        <span id="judulPreview">Judul Berita</span>
+      </div>
+    </div>
+<div class="watermark-domain">
+  www.kabarkarawang.com
+  <div class="social">
+    <!-- Facebook -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+      <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 
+        12.42-50.06 52.24-50.06h40.42V6.26S293.36 0 
+        268.19 0c-73.22 0-121.15 44.38-121.15 
+        124.72v70.62H86.4V288h60.64v224h92.66V288z"/>
+    </svg>   Kabar Karawang
+
+    <!-- Instagram -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+      <path d="M224.1 141c-63.6 0-114.9 
+        51.3-114.9 114.9s51.3 114.9 
+        114.9 114.9S339 319.5 339 
+        255.9 287.7 141 224.1 
+        141zm0 189.6c-41.2 0-74.7-33.5-74.7-74.7 
+        0-41.2 33.5-74.7 74.7-74.7 
+        41.2 0 74.7 33.5 74.7 
+        74.7 0 41.2-33.5 74.7-74.7 
+        74.7zm146.4-194.3c0 14.9-12 
+        26.9-26.9 26.9-14.9 0-26.9-12-26.9-26.9 
+        s12-26.9 26.9-26.9 26.9 12 
+        26.9 26.9zm76.1 27.2c-1.7-35.7-9.9-67.3-36.2-93.6
+        -26.3-26.3-57.9-34.5-93.6-36.2
+        -37-2.1-147.8-2.1-184.8 
+        0-35.7 1.7-67.3 9.9-93.6 
+        36.2-26.3 26.3-34.5 57.9-36.2 
+        93.6-2.1 37-2.1 147.8 
+        0 184.8 1.7 35.7 9.9 67.3 
+        36.2 93.6 26.3 26.3 57.9 
+        34.5 93.6 36.2 37 2.1 147.8 
+        2.1 184.8 0 35.7-1.7 67.3-9.9 
+        93.6-36.2 26.3-26.3 34.5-57.9 
+        36.2-93.6 2.1-37 2.1-147.8 
+        0-184.8z"/>
+    </svg>  Kabar Karawang    
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="28" height="28" fill="red">
+    <path d="M549.7 124.1c-6.3-23.7-24.9-42.3-48.6-48.6C465.3 64 
+      288 64 288 64s-177.3 0-213.1 10.6c-23.7 
+      6.3-42.3 24.9-48.6 48.6C16 159.9 16 
+      256 16 256s0 96.1 10.3 131.9c6.3 
+      23.7 24.9 42.3 48.6 48.6C110.7 
+      448 288 448 288 448s177.3 0 213.1-10.6c23.7-6.3 
+      42.3-24.9 48.6-48.6C560 352.1 
+      560 256 560 256s0-96.1-10.3-131.9zM232 
+      338.5V173.5L368 256l-136 82.5z"/>
+  </svg>
+  <span>Kabar Karawang</span>
+</a>
+  </div>
+</div>
+
+  </div>
+</div>
+  <script>
+    let selectedContent = '';
+let allItems = []; // untuk simpan semua data item
+let itemsPerPage = 6;
+let currentIndex = 0;
+
+    function stripHtmlTags(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.innerText;
+    }
+
+    function loadXMLFeed() {
+      const url = 'https://www.cnnindonesia.com/nasional/rss';
+      fetch(url)
+        .then(response => response.text())
+        .then(data => {
+          let parser = new DOMParser();
+          let xml = parser.parseFromString(data, 'application/xml');
+          displayFeedList(xml);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadXMLFeed);
+
+function displayFeedList(x) {
+  const items = Array.from(x.getElementsByTagName('item'));
+  const updateDate = document.getElementById('updateDate');
+  updateDate.innerHTML = '🕒 Diperbarui: ' + new Date(x.getElementsByTagName('lastBuildDate')[0].textContent).toLocaleString();
+  
+  allItems = items;
+  currentIndex = 0;
+  document.getElementById('postList').innerHTML = ''; // bersihkan list
+  showNextItems();
+}
+function showNextItems() {
+  const list = document.getElementById('postList');
+  const nextItems = allItems.slice(currentIndex, currentIndex + itemsPerPage);
+
+  nextItems.forEach(item => {
+    const title = item.getElementsByTagName('title')[0].textContent;
+    const link = item.getElementsByTagName('link')[0].textContent;
+    const description = item.getElementsByTagName('description')[0].textContent;
+    const match = description.match(/<img[^>]+src=["']([^"'>]+)["']/);
+    const img = match ? match[1] : "https://via.placeholder.com/1080x1350";
+    const card = document.createElement('div');
+    card.className = 'post-card';
+    card.innerHTML = `<img src="${img}"/><div class="title">${title}</div>`;
+    card.addEventListener('click', () => showPoster(title, img, description, link));
+    list.appendChild(card);
+  });
+
+  currentIndex += itemsPerPage;
+
+  if (currentIndex >= allItems.length) {
+    document.getElementById('loadMoreBtn').style.display = 'none';
+  } else {
+    document.getElementById('loadMoreBtn').style.display = 'inline-block';
+  }
+}
+
+    async function showPoster(title, fallbackImg, content, link) {
+      const outputEl = document.getElementById('output');
+      outputEl.classList.add('loading');
+      try {
+        const res = await fetch(link);
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const ogImg = doc.querySelector('meta[property="og:image"]')?.content;
+
+        const finalImg = ogImg || fallbackImg;
+       const proxy = 'https://images.weserv.nl/?url=' + encodeURIComponent(finalImg) +
+  '&w=1080&h=1350&fit=cover&output=jpg&sharp=1';
+
+
+        const bgImage = document.getElementById("bgImage");
+        bgImage.onload = () => {
+  outputEl.style.display = 'block';
+  document.getElementById("judulPreview").textContent = title;
+  outputEl.classList.remove('loading');
+  selectedContent = content;
+};
+
+        bgImage.onerror = () => {
+          outputEl.classList.remove('loading');
+          alert("Gagal memuat gambar.");
+        };
+bgImage.src = proxy + '&t=' + Date.now(); // tambahkan timestamp supaya unik
+      } catch (err) {
+        outputEl.classList.remove('loading');
+        alert("Gagal mengambil og:image dari halaman.");
+      }
+    }
+
+    document.getElementById("downloadBtn").addEventListener('click', () => {
+      const outputEl = document.getElementById('output');
+htmlToImage.toPng(outputEl, {
+  pixelRatio: 2,
+  cacheBust: true,
+  style: {
+    margin: '0',
+    padding: '0',
+    boxSizing: 'border-box',
+    filter: 'brightness(1.15) contrast(1.1) saturate(1.2)' // ← Tambahan penting
+  }
+})
+
+        .then(dataUrl => {
+          const link = document.createElement('a');
+          link.download = '808-news-hd.png';
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch(err => {
+          alert('❌ Gagal membuat gambar. Pastikan gambar berhasil dimuat.');
+          console.error(err);
+        });
+    });
+
+    document.getElementById("copyBtn").addEventListener('click', () => {
+
+      if (!selectedContent) return alert('Pilih artikel dulu.');
+      const plainText = stripHtmlTags(selectedContent).trim().substring(0, 300);
+      const textWithPrefix = '🚨Kabar Karawang - ' + plainText + '\n\n#nasional #Karawang #BeritaKarawang #BreakingNews';
+      navigator.clipboard.writeText(textWithPrefix).then(() => {
+        alert('Berita berhasil disalin!');
+      });
+    });
+ document.getElementById("loadMoreBtn").addEventListener('click', showNextItems);
+ </script>
+</body>
+</html>
