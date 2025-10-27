@@ -70,26 +70,26 @@ body {
 #output {
   position: relative;
   width: 1080px;
-  height: 1080px;
+  height: 1350px; /* ubah dari 1080px jadi 1350px */
   margin: 40px auto;
   border-radius: 6px;
   overflow: hidden;
   display: none;
-    filter: brightness(1.15) contrast(1.1) saturate(1.2);
+  filter: brightness(1.15) contrast(1.1) saturate(1.2);
   box-shadow: 0 0 20px rgba(0,0,0,0.4);
-  background: #000; /* tambahan agar tidak transparan */
+  background: #000;
 }
 
+#bgImage {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* tetap cover, tapi proporsi lebih tinggi */
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
 
-    #bgImage {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
 
     .bg-overlay {
       position: absolute;
@@ -144,7 +144,7 @@ body {
   gap: 14px; /* jarak antar item */
   font-size: 24px;
   font-weight: bold;
-  color: #03A9F4; /* kuning modern */
+  color: #ffffff; /* kuning modern */
   z-index: 3;
 }
 
@@ -392,7 +392,9 @@ function showNextItems() {
         const ogImg = doc.querySelector('meta[property="og:image"]')?.content;
 
         const finalImg = ogImg || fallbackImg;
-        const proxy = 'https://images.weserv.nl/?url=' + encodeURIComponent(finalImg) + '&w=1080&h=1350&fit=cover&output=jpg&sharp=1';
+       const proxy = 'https://images.weserv.nl/?url=' + encodeURIComponent(finalImg) +
+  '&w=1080&h=1350&fit=cover&output=jpg&sharp=1';
+
 
         const bgImage = document.getElementById("bgImage");
         bgImage.onload = () => {
@@ -425,9 +427,10 @@ htmlToImage.toPng(outputEl, {
     filter: 'brightness(1.15) contrast(1.1) saturate(1.2)' // ← Tambahan penting
   }
 })
+
         .then(dataUrl => {
           const link = document.createElement('a');
-          link.download = 'kabar-news-hd.png';
+          link.download = '808-news-hd.png';
           link.href = dataUrl;
           link.click();
         })
